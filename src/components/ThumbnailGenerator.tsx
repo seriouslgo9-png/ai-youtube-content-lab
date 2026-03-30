@@ -1,91 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Image, Sparkles, Download } from "lucide-react";
+import { Image, Sparkles, Download, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { LoadingSpinner } from "./LoadingSpinner";
-
-function drawThumbnail(canvas: HTMLCanvasElement, idea: string) {
-  const ctx = canvas.getContext("2d")!;
-  canvas.width = 1280;
-  canvas.height = 720;
-
-  // Gradient background
-  const grad = ctx.createLinearGradient(0, 0, 1280, 720);
-  const hues = [
-    [280, 200],
-    [330, 190],
-    [200, 300],
-    [160, 280],
-  ];
-  const pick = hues[Math.floor(Math.random() * hues.length)];
-  grad.addColorStop(0, `hsl(${pick[0]}, 80%, 15%)`);
-  grad.addColorStop(0.5, `hsl(${(pick[0] + pick[1]) / 2}, 70%, 20%)`);
-  grad.addColorStop(1, `hsl(${pick[1]}, 80%, 10%)`);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1280, 720);
-
-  // Decorative circles
-  for (let i = 0; i < 5; i++) {
-    ctx.beginPath();
-    ctx.arc(
-      Math.random() * 1280,
-      Math.random() * 720,
-      50 + Math.random() * 100,
-      0,
-      Math.PI * 2
-    );
-    ctx.fillStyle = `hsla(${pick[0] + Math.random() * 60}, 80%, 50%, 0.1)`;
-    ctx.fill();
-  }
-
-  // Title text
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  // Shadow
-  ctx.shadowColor = "rgba(0,0,0,0.5)";
-  ctx.shadowBlur = 20;
-  ctx.shadowOffsetY = 5;
-
-  // Main text
-  const words = idea.toUpperCase().split(" ");
-  const lines: string[] = [];
-  let currentLine = "";
-  for (const word of words) {
-    if ((currentLine + " " + word).length > 20) {
-      lines.push(currentLine.trim());
-      currentLine = word;
-    } else {
-      currentLine += " " + word;
-    }
-  }
-  if (currentLine.trim()) lines.push(currentLine.trim());
-
-  const fontSize = lines.length > 3 ? 60 : lines.length > 2 ? 72 : 85;
-  ctx.font = `bold ${fontSize}px 'Space Grotesk', Arial, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-
-  const totalHeight = lines.length * (fontSize + 10);
-  const startY = 360 - totalHeight / 2 + fontSize / 2;
-
-  lines.forEach((line, i) => {
-    ctx.fillText(line, 640, startY + i * (fontSize + 10));
-  });
-
-  // Accent bar
-  ctx.shadowColor = "transparent";
-  const barGrad = ctx.createLinearGradient(340, 0, 940, 0);
-  barGrad.addColorStop(0, `hsl(${pick[0]}, 90%, 60%)`);
-  barGrad.addColorStop(1, `hsl(${pick[1]}, 90%, 60%)`);
-  ctx.fillStyle = barGrad;
-  ctx.fillRect(440, startY + lines.length * (fontSize + 10) + 10, 400, 6);
-}
+import { generateThumbnail } from "@/lib/ai-service";
 
 export function ThumbnailGenerator() {
   const [idea, setIdea] = useState("");
   const [loading, setLoading] = useState(false);
-  const [generated, setGenerated] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     if (!idea.trim()) {
@@ -93,23 +16,23 @@ export function ThumbnailGenerator() {
       return;
     }
     setLoading(true);
-    setGenerated(false);
+    setImageUrl(null);
 
-    await new Promise((r) => setTimeout(r, 1500));
-
-    if (canvasRef.current) {
-      drawThumbnail(canvasRef.current, idea);
-      setGenerated(true);
+    try {
+      const url = await generateThumbnail(idea);
+      setImageUrl(url);
       toast.success("Thumbnail generated! 🎨");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to generate thumbnail");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleDownload = () => {
-    if (!canvasRef.current) return;
-    const url = canvasRef.current.toDataURL("image/png");
+    if (!imageUrl) return;
     const a = document.createElement("a");
-    a.href = url;
+    a.href = imageUrl;
     a.download = `thumbnail-${idea.replace(/\s+/g, "-").toLowerCase()}.png`;
     a.click();
     toast.success("Thumbnail downloaded! 📥");
@@ -126,24 +49,28 @@ export function ThumbnailGenerator() {
           <div className="p-2 rounded-lg bg-accent/20">
             <Image className="h-5 w-5 text-accent" />
           </div>
-          <h2 className="text-xl font-heading font-semibold">Thumbnail Generator</h2>
+          <h2 className="text-xl font-heading font-semibold">AI Thumbnail Generator</h2>
         </div>
+
+        <p className="text-sm text-muted-foreground mb-4">
+          Powered by AI — generates unique, professional thumbnails for your videos.
+        </p>
 
         <div className="flex gap-3">
           <input
             className="input-glass flex-1"
-            placeholder="Describe your thumbnail idea (e.g., 'AI Takes Over YouTube')"
+            placeholder="Describe your thumbnail (e.g., 'AI Takes Over YouTube 2025')"
             value={idea}
             onChange={(e) => setIdea(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
+            onKeyDown={(e) => e.key === "Enter" && !loading && handleGenerate()}
           />
           <button
             className="btn-neon flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
             onClick={handleGenerate}
             disabled={loading}
           >
-            <Sparkles className="h-4 w-4" />
-            Generate
+            {loading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {loading ? "Generating..." : "Generate"}
           </button>
         </div>
       </motion.div>
@@ -156,7 +83,7 @@ export function ThumbnailGenerator() {
             exit={{ opacity: 0 }}
             className="glass-card p-6"
           >
-            <LoadingSpinner text="Creating your thumbnail..." />
+            <LoadingSpinner text="AI is creating your thumbnail... this may take 15-30 seconds" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -167,36 +94,43 @@ export function ThumbnailGenerator() {
         transition={{ delay: 0.1 }}
         className="glass-card p-6"
       >
-        <canvas
-          ref={canvasRef}
-          className={`w-full rounded-lg transition-all duration-500 ${
-            generated
-              ? "opacity-100 hover:scale-[1.02] cursor-pointer"
-              : "opacity-0 h-0"
-          }`}
-          style={generated ? { aspectRatio: "16/9" } : {}}
-        />
-        {generated && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex justify-end mt-4"
-          >
-            <button
-              onClick={handleDownload}
-              className="btn-neon-cyan flex items-center gap-2"
-            >
-              <Download className="h-4 w-4" />
-              Download PNG
-            </button>
-          </motion.div>
-        )}
-        {!generated && !loading && (
+        {imageUrl ? (
+          <div className="space-y-4">
+            <motion.img
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              src={imageUrl}
+              alt="AI Generated Thumbnail"
+              className="w-full rounded-lg shadow-2xl hover:scale-[1.02] transition-transform cursor-pointer"
+              style={{ aspectRatio: "16/9", objectFit: "cover" }}
+            />
+            <div className="flex justify-between items-center">
+              <p className="text-xs text-muted-foreground">AI-generated thumbnail</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleGenerate}
+                  className="btn-neon flex items-center gap-2 text-sm"
+                  disabled={loading}
+                >
+                  <RefreshCw className="h-3 w-3" />
+                  Regenerate
+                </button>
+                <button
+                  onClick={handleDownload}
+                  className="btn-neon-cyan flex items-center gap-2 text-sm"
+                >
+                  <Download className="h-4 w-4" />
+                  Download
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : !loading ? (
           <div className="text-center py-12 text-muted-foreground">
             <Image className="h-12 w-12 mx-auto mb-3 opacity-30" />
-            <p className="text-sm">Your thumbnail will appear here</p>
+            <p className="text-sm">Your AI-generated thumbnail will appear here</p>
           </div>
-        )}
+        ) : null}
       </motion.div>
     </div>
   );

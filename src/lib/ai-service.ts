@@ -45,7 +45,16 @@ export async function generateTitles(topic: string): Promise<string[]> {
 }
 
 export async function generateThumbnail(idea: string): Promise<string> {
-  return idea;
+  const { data, error } = await supabase.functions.invoke("chat", {
+    body: {
+      messages: [{ role: "user", content: idea }],
+      type: "thumbnail",
+    },
+  });
+
+  if (error) throw new Error(error.message || "Thumbnail generation failed");
+  if (data?.error) throw new Error(data.error);
+  return data.imageUrl;
 }
 
 // localStorage helpers

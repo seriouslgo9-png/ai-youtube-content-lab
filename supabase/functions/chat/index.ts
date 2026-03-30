@@ -13,6 +13,48 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    // Handle thumbnail image generation
+    if (type === "thumbnail") {
+      const userPrompt = messages?.[0]?.content || "YouTube thumbnail";
+      const imagePrompt = `Create a professional, eye-catching YouTube video thumbnail for: "${userPrompt}". Make it vibrant, bold, high-contrast, with dramatic lighting. Use cinematic composition. Include bold large text overlay that says the key topic. Make it look like a top YouTuber's thumbnail with professional graphic design. 16:9 aspect ratio.`;
+
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash-image",
+          messages: [{ role: "user", content: imagePrompt }],
+          modalities: ["image", "text"],
+        }),
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("Image generation error:", response.status, text);
+        if (response.status === 429) {
+          return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
+            status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        throw new Error(`Image generation error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+
+      if (!imageUrl) {
+        throw new Error("No image was generated. Try a different description.");
+      }
+
+      return new Response(JSON.stringify({ imageUrl }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Handle text-based requests
     const systemPrompts: Record<string, string> = {
       chat: "You are an expert YouTube content strategist. Help users grow their channels with actionable advice about SEO, content ideas, thumbnails, engagement, and monetization. Be enthusiastic, specific, and use markdown formatting with emojis.",
       script: "You are a professional YouTube scriptwriter. When given a topic, generate a complete, engaging YouTube video script with sections: HOOK (first 15 seconds), INTRO, MAIN CONTENT (3+ key points), CALL TO ACTION, and OUTRO. Use markdown formatting, be specific and entertaining.",
