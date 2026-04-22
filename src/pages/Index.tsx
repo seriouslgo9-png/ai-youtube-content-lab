@@ -10,6 +10,7 @@ import { AIChatbot } from "@/components/AIChatbot";
 import { TrendingIdeas } from "@/components/TrendingIdeas";
 import { TitleGenerator } from "@/components/TitleGenerator";
 import { FloatingBubbles } from "@/components/FloatingBubbles";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const tabs = [
   { id: "script", label: "Script Generator", icon: FileText, emoji: "🎬" },
@@ -294,6 +295,7 @@ export default function Index() {
                 ← Back to Home
               </motion.button>
             )}
+            <ThemeToggle />
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-green/10 border border-neon-green/20">
               <motion.div
                 className="w-1.5 h-1.5 rounded-full bg-neon-green"
