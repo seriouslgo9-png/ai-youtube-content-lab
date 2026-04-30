@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Image, Bot, TrendingUp, Type, Youtube,
-  Sparkles, Zap, Wand2, ArrowRight, Star,
+  Sparkles, Zap, Wand2, ArrowRight, Star, LogIn, LogOut,
 } from "lucide-react";
 import { ScriptGenerator } from "@/components/ScriptGenerator";
 import { ThumbnailGenerator } from "@/components/ThumbnailGenerator";
@@ -11,6 +12,7 @@ import { TrendingIdeas } from "@/components/TrendingIdeas";
 import { TitleGenerator } from "@/components/TitleGenerator";
 import { FloatingBubbles } from "@/components/FloatingBubbles";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useAuth } from "@/hooks/useAuth";
 
 const tabs = [
   { id: "script", label: "Script Generator", icon: FileText, emoji: "🎬" },
@@ -235,8 +237,14 @@ function FeatureCards({ onSelect }: { onSelect: (id: TabId) => void }) {
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<TabId | null>(null);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleSelectTool = (id: TabId) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     setActiveTab(id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -296,6 +304,28 @@ export default function Index() {
               </motion.button>
             )}
             <ThemeToggle />
+            {user ? (
+              <motion.button
+                onClick={signOut}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+                title={user.email ?? ""}
+              >
+                <LogOut className="h-3 w-3" />
+                <span className="hidden sm:inline">Sign out</span>
+              </motion.button>
+            ) : (
+              <motion.button
+                onClick={() => navigate("/login")}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-gradient-to-r from-[hsl(0,85%,55%)] to-[hsl(330,85%,60%)] text-white shadow-lg"
+              >
+                <LogIn className="h-3 w-3" />
+                Sign in
+              </motion.button>
+            )}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-green/10 border border-neon-green/20">
               <motion.div
                 className="w-1.5 h-1.5 rounded-full bg-neon-green"
