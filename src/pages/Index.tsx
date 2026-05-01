@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Image, Bot, TrendingUp, Type, Youtube,
-  Sparkles, Zap, Wand2, ArrowRight, Star, LogIn, LogOut,
+  Sparkles, Zap, Wand2, ArrowRight, Star, LogIn, LogOut, LayoutDashboard, Crown,
 } from "lucide-react";
 import { ScriptGenerator } from "@/components/ScriptGenerator";
 import { ThumbnailGenerator } from "@/components/ThumbnailGenerator";
@@ -13,6 +13,9 @@ import { TitleGenerator } from "@/components/TitleGenerator";
 import { FloatingBubbles } from "@/components/FloatingBubbles";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/hooks/useAuth";
+import { CreditsBadge } from "@/components/CreditsBadge";
+import { useProfile } from "@/hooks/useProfile";
+import { toast } from "sonner";
 
 const tabs = [
   { id: "script", label: "Script Generator", icon: FileText, emoji: "🎬" },
@@ -238,11 +241,18 @@ function FeatureCards({ onSelect }: { onSelect: (id: TabId) => void }) {
 export default function Index() {
   const [activeTab, setActiveTab] = useState<TabId | null>(null);
   const { user, signOut } = useAuth();
+  const { profile } = useProfile();
   const navigate = useNavigate();
 
   const handleSelectTool = (id: TabId) => {
     if (!user) {
       navigate("/login");
+      return;
+    }
+    if (profile && profile.credits <= 0) {
+      toast.error("Out of credits! Upgrade to keep creating.", {
+        action: { label: "Upgrade", onClick: () => navigate("/pricing") },
+      });
       return;
     }
     setActiveTab(id);
@@ -304,6 +314,27 @@ export default function Index() {
               </motion.button>
             )}
             <ThemeToggle />
+            <motion.button
+              onClick={() => navigate("/pricing")}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold border border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 transition-all"
+            >
+              <Crown className="h-3 w-3" />
+              Pricing
+            </motion.button>
+            {user && <CreditsBadge />}
+            {user && (
+              <motion.button
+                onClick={() => navigate("/dashboard")}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+              >
+                <LayoutDashboard className="h-3 w-3" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </motion.button>
+            )}
             {user ? (
               <motion.button
                 onClick={signOut}
