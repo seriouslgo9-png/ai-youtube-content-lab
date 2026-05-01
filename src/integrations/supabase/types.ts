@@ -14,16 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      generations: {
+        Row: {
+          created_at: string
+          id: string
+          prompt: string | null
+          result: string | null
+          tool: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt?: string | null
+          result?: string | null
+          tool: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt?: string | null
+          result?: string | null
+          tool?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          credits: number
+          email: string | null
+          id: string
+          plan: Database["public"]["Enums"]["plan_tier"]
+          referral_code: string | null
+          referred_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          credits?: number
+          email?: string | null
+          id: string
+          plan?: Database["public"]["Enums"]["plan_tier"]
+          referral_code?: string | null
+          referred_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          email?: string | null
+          id?: string
+          plan?: Database["public"]["Enums"]["plan_tier"]
+          referral_code?: string | null
+          referred_by?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      use_credit: { Args: { _amount?: number }; Returns: number }
     }
     Enums: {
-      [_ in never]: never
+      plan_tier: "free" | "pro" | "business"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +206,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      plan_tier: ["free", "pro", "business"],
+    },
   },
 } as const
