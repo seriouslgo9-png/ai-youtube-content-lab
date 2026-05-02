@@ -17,7 +17,7 @@ const phoneSchema = z
   .string()
   .trim()
   .transform((v) => v.replace(/[\s\-()]/g, ""))
-  .regex(/^\+[1-9]\d{6,14}$/, "Use international format e.g. +14155550123");
+  .pipe(z.string().regex(/^\+[1-9]\d{6,14}$/, "Use international format e.g. +14155550123 or +919876543210"));
 
 export default function Login() {
   const [channel, setChannel] = useState<Channel>("email");
