@@ -16,6 +16,7 @@ const emailSchema = z.string().trim().email("Enter a valid email").max(255);
 const phoneSchema = z
   .string()
   .trim()
+  .transform((v) => v.replace(/[\s\-()]/g, ""))
   .regex(/^\+[1-9]\d{6,14}$/, "Use international format e.g. +14155550123");
 
 export default function Login() {
