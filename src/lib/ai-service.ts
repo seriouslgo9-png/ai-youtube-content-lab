@@ -17,9 +17,12 @@ export async function generateScript(topic: string): Promise<string> {
   );
 }
 
-export async function chatWithAI(message: string): Promise<string> {
+export async function chatWithAI(
+  message: string,
+  history: { role: string; content: string }[] = []
+): Promise<string> {
   return callAI(
-    [{ role: "user", content: message }],
+    [...history, { role: "user", content: message }],
     "chat"
   );
 }
