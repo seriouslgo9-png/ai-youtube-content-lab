@@ -66,11 +66,14 @@ export function ScriptGenerator() {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6"
       >
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-lg bg-primary/20">
+        <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border/40">
+          <div className="h-11 w-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
             <FileText className="h-5 w-5 text-primary" />
           </div>
-          <h2 className="text-xl font-heading font-semibold">Script Generator</h2>
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">Create</p>
+            <h2 className="text-lg font-heading font-medium tracking-tight leading-tight">Script Generator</h2>
+          </div>
         </div>
 
         <div className="flex gap-3">
