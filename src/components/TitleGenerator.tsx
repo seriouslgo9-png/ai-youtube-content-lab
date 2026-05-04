@@ -4,6 +4,7 @@ import { Type, Sparkles, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { generateTitles } from "@/lib/ai-service";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { ToolHeader } from "./ToolHeader";
 
 export function TitleGenerator() {
   const [topic, setTopic] = useState("");
@@ -38,21 +39,19 @@ export function TitleGenerator() {
 
   return (
     <div className="space-y-6">
+      <ToolHeader
+        icon={Type}
+        eyebrow="Headline"
+        title="Title Generator"
+        description="Click-worthy titles that rank and convert."
+        accent="var(--neon-cyan)"
+        accent2="var(--neon-green)"
+      />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6"
       >
-        <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border/40">
-          <div className="h-11 w-11 rounded-xl bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center">
-            <Type className="h-5 w-5 text-neon-cyan" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">Headline</p>
-            <h2 className="text-lg font-heading font-medium tracking-tight leading-tight">Title Generator</h2>
-          </div>
-        </div>
-
         <div className="flex gap-3">
           <input
             className="input-glass flex-1"
