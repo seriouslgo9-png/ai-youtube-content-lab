@@ -4,6 +4,7 @@ import { TrendingUp, RefreshCw, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { getTrendingIdeas } from "@/lib/ai-service";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { ToolHeader } from "./ToolHeader";
 
 export function TrendingIdeas() {
   const [ideas, setIdeas] = useState<string[]>([]);
@@ -29,21 +30,20 @@ export function TrendingIdeas() {
 
   return (
     <div className="space-y-6">
+      <ToolHeader
+        icon={TrendingUp}
+        eyebrow="Discover"
+        title="Trending Ideas"
+        description="Fresh, viral-ready video ideas — never run dry again."
+        accent="var(--neon-green)"
+        accent2="var(--neon-cyan)"
+      />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6"
       >
-        <div className="flex items-center justify-between mb-6 pb-5 border-b border-border/40">
-          <div className="flex items-center gap-4">
-            <div className="h-11 w-11 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center">
-              <TrendingUp className="h-5 w-5 text-neon-green" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">Discover</p>
-              <h2 className="text-lg font-heading font-medium tracking-tight leading-tight">Trending Ideas</h2>
-            </div>
-          </div>
+        <div className="flex items-center justify-end mb-4">
           <button
             className="btn-neon flex items-center gap-2 disabled:opacity-50"
             onClick={handleGenerate}

@@ -214,6 +214,54 @@
     background: linear-gradient(135deg, hsla(var(--neon-purple) / 0.2), hsla(var(--neon-cyan) / 0.1));
     border-color: hsla(var(--neon-purple) / 0.5);
   }
+
+  /* 3D curved tool header */
+  .tool-header {
+    @apply relative overflow-hidden rounded-3xl border p-6 sm:p-8 mb-6;
+    background:
+      radial-gradient(120% 100% at 0% 0%, hsla(var(--glass-bg) / 0.9), hsla(var(--glass-bg) / 0.3) 60%),
+      linear-gradient(135deg, hsla(var(--glass-bg) / 0.5), hsla(var(--glass-bg) / 0.2));
+    border-color: hsla(var(--glass-border) / 0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  .tool-header::before,
+  .tool-header::after {
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(40px);
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  .tool-header::before {
+    width: 220px; height: 220px;
+    top: -90px; right: -60px;
+    background: radial-gradient(circle, hsla(var(--tool-accent, var(--neon-purple)) / 0.55), transparent 70%);
+  }
+
+  .tool-header::after {
+    width: 180px; height: 180px;
+    bottom: -90px; left: -40px;
+    background: radial-gradient(circle, hsla(var(--tool-accent-2, var(--neon-cyan)) / 0.35), transparent 70%);
+  }
+
+  .orb-3d {
+    @apply relative flex items-center justify-center rounded-2xl;
+    background:
+      radial-gradient(circle at 30% 25%, hsla(0,0%,100%,0.35), transparent 45%),
+      linear-gradient(140deg, hsl(var(--tool-accent, var(--neon-purple))), hsl(var(--tool-accent-2, var(--neon-pink))));
+    box-shadow:
+      0 10px 30px -8px hsla(var(--tool-accent, var(--neon-purple)) / 0.55),
+      inset 0 1px 0 hsla(0,0%,100%,0.35),
+      inset 0 -8px 18px hsla(0,0%,0%,0.25);
+  }
+
+  .eyebrow {
+    @apply text-[10px] font-heading font-semibold uppercase tracking-[0.22em] text-muted-foreground/80;
+  }
 }
 
 @layer utilities {

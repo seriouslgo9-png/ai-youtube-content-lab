@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { generateScript, saveScript, getSavedScripts, deleteScript, type SavedScript } from "@/lib/ai-service";
+import { ToolHeader } from "./ToolHeader";
 
 export function ScriptGenerator() {
   const [topic, setTopic] = useState("");
@@ -61,21 +62,19 @@ export function ScriptGenerator() {
 
   return (
     <div className="space-y-6">
+      <ToolHeader
+        icon={FileText}
+        eyebrow="Create"
+        title="Script Generator"
+        description="Turn any topic into a complete, ready-to-record script."
+        accent="var(--neon-purple)"
+        accent2="var(--neon-pink)"
+      />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6"
       >
-        <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border/40">
-          <div className="h-11 w-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <FileText className="h-5 w-5 text-primary" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">Create</p>
-            <h2 className="text-lg font-heading font-medium tracking-tight leading-tight">Script Generator</h2>
-          </div>
-        </div>
-
         <div className="flex gap-3">
           <input
             className="input-glass flex-1"
