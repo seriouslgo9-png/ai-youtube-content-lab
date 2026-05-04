@@ -34,12 +34,15 @@ export function TrendingIdeas() {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6"
       >
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-neon-green/20">
+        <div className="flex items-center justify-between mb-6 pb-5 border-b border-border/40">
+          <div className="flex items-center gap-4">
+            <div className="h-11 w-11 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center">
               <TrendingUp className="h-5 w-5 text-neon-green" />
             </div>
-            <h2 className="text-xl font-heading font-semibold">Trending Ideas</h2>
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80">Discover</p>
+              <h2 className="text-lg font-heading font-medium tracking-tight leading-tight">Trending Ideas</h2>
+            </div>
           </div>
           <button
             className="btn-neon flex items-center gap-2 disabled:opacity-50"
