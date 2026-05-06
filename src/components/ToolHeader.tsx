@@ -24,13 +24,13 @@ export function ToolHeader({ icon: Icon, eyebrow, title, description, accent, ac
           initial={{ scale: 0.6, rotate: -20 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 180, damping: 14 }}
-          className="orb-3d h-12 w-12 shrink-0"
+          className="orb-3d h-14 w-14 shrink-0"
         >
-          <Icon className="h-5 w-5 text-foreground" strokeWidth={1.5} />
+          <Icon className="h-6 w-6 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]" />
         </motion.div>
         <div className="min-w-0">
           <p className="eyebrow">{eyebrow}</p>
-          <h2 className="font-heading font-medium text-2xl sm:text-3xl tracking-tight leading-tight mt-1">
+          <h2 className="font-heading font-semibold text-2xl sm:text-3xl tracking-tight leading-tight mt-1">
             {title}
           </h2>
           {description && (

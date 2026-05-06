@@ -119,11 +119,17 @@
 
 @layer components {
   .glass-card {
-    @apply rounded-xl border;
-    background: hsla(var(--glass-bg) / 0.6);
-    border-color: hsla(var(--glass-border) / 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    @apply relative rounded-2xl border;
+    background:
+      linear-gradient(180deg, hsla(var(--glass-bg) / 0.7), hsla(var(--glass-bg) / 0.35));
+    border-color: hsla(var(--glass-border) / 0.55);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 hsla(0,0%,100%,0.06),
+      inset 0 0 0 1px hsla(var(--neon-purple) / 0.04),
+      0 20px 60px -30px hsla(var(--neon-purple) / 0.4),
+      0 8px 30px -12px hsla(0,0%,0%,0.5);
   }
 
   .glass-card-hover {
@@ -217,19 +223,77 @@
 
   /* 3D curved tool header */
   .tool-header {
-    @apply relative overflow-hidden rounded-2xl border-b pb-6 mb-8 pt-2;
-    border-color: hsla(var(--glass-border) / 0.4);
+    @apply relative overflow-hidden rounded-3xl border p-6 sm:p-8 mb-6;
+    background:
+      radial-gradient(120% 100% at 0% 0%, hsla(var(--glass-bg) / 0.85), hsla(var(--glass-bg) / 0.25) 60%);
+    border-color: hsla(var(--glass-border) / 0.55);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 hsla(0,0%,100%,0.08),
+      0 30px 80px -40px hsla(var(--tool-accent, var(--neon-purple)) / 0.5);
   }
 
   .tool-header::before,
   .tool-header::after {
-    content: none;
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(50px);
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  .tool-header::before {
+    width: 240px; height: 240px; top: -100px; right: -60px;
+    background: radial-gradient(circle, hsla(var(--tool-accent, var(--neon-purple)) / 0.7), transparent 70%);
+  }
+  .tool-header::after {
+    width: 200px; height: 200px; bottom: -100px; left: -50px;
+    background: radial-gradient(circle, hsla(var(--tool-accent-2, var(--neon-cyan)) / 0.55), transparent 70%);
   }
 
   .orb-3d {
-    @apply relative flex items-center justify-center rounded-xl border;
-    background: hsla(var(--glass-bg) / 0.4);
+    @apply relative flex items-center justify-center rounded-2xl;
+    background:
+      radial-gradient(circle at 30% 25%, hsla(0,0%,100%,0.4), transparent 45%),
+      linear-gradient(140deg, hsl(var(--tool-accent, var(--neon-purple))), hsl(var(--tool-accent-2, var(--neon-pink))));
+    box-shadow:
+      0 12px 30px -8px hsla(var(--tool-accent, var(--neon-purple)) / 0.6),
+      inset 0 1px 0 hsla(0,0%,100%,0.4),
+      inset 0 -8px 18px hsla(0,0%,0%,0.3);
+  }
+
+  /* Neon glass feature tile */
+  .neon-tile {
+    @apply relative rounded-2xl border p-5 text-left overflow-hidden transition-all duration-300;
+    background: linear-gradient(180deg, hsla(var(--glass-bg) / 0.7), hsla(var(--glass-bg) / 0.3));
     border-color: hsla(var(--glass-border) / 0.5);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 hsla(0,0%,100%,0.06),
+      0 20px 50px -30px hsla(0,0%,0%,0.6);
+  }
+  .neon-tile::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsla(var(--tile-accent, var(--neon-purple)) / 0.6), transparent 50%, hsla(var(--tile-accent-2, var(--neon-cyan)) / 0.5));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0.5;
+    transition: opacity .3s;
+  }
+  .neon-tile:hover::before { opacity: 1; }
+  .neon-tile:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 1px 0 hsla(0,0%,100%,0.1),
+      0 30px 60px -30px hsla(var(--tile-accent, var(--neon-purple)) / 0.5),
+      0 0 40px -10px hsla(var(--tile-accent, var(--neon-purple)) / 0.4);
   }
 
   .eyebrow {
