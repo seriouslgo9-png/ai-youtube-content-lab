@@ -37,15 +37,14 @@ const stats = [
 function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
   return (
     <section className="relative py-24 md:py-32 flex flex-col items-center text-center px-4">
-      {/* Badge */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="mb-6"
       >
-        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-heading uppercase tracking-[0.25em] border border-border/50 bg-background/40 text-muted-foreground backdrop-blur-md">
-          <span className="w-1 h-1 rounded-full bg-primary" />
+        <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10px] font-heading uppercase tracking-[0.25em] border border-primary/30 bg-primary/10 text-primary backdrop-blur-xl shadow-[0_0_30px_-8px_hsla(265,90%,65%,0.5)]">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--neon-purple))]" />
           AI Content Lab
         </span>
       </motion.div>
@@ -55,10 +54,10 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="font-heading font-medium text-5xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight max-w-4xl"
+        className="font-heading font-semibold text-5xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight max-w-4xl"
       >
-        <span className="block text-foreground">Create YouTube,</span>
-        <span className="block mt-1 text-muted-foreground/80 italic font-light">effortlessly.</span>
+        <span className="block text-foreground">Create YouTube</span>
+        <span className="block mt-1"><span className="gradient-text">magic</span> <span className="text-foreground">with</span> <span className="gradient-text-pink">AI</span></span>
       </motion.h1>
 
       {/* Subtitle */}
@@ -80,17 +79,17 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
       >
         <motion.button
           onClick={onGetStarted}
-          className="group inline-flex items-center gap-2 text-sm font-heading font-medium px-6 py-3 rounded-full bg-foreground text-background hover:bg-foreground/90 transition"
-          whileHover={{ y: -1 }}
+          className="btn-neon group inline-flex items-center gap-2 text-sm px-7 py-3.5 rounded-full"
+          whileHover={{ y: -2 }}
           whileTap={{ scale: 0.97 }}
         >
           Start creating
-          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </motion.button>
         <motion.button
           onClick={onGetStarted}
-          className="px-6 py-3 rounded-full text-sm font-heading font-medium border border-border/60 text-foreground hover:bg-muted/30 transition"
-          whileHover={{ y: -1 }}
+          className="px-7 py-3.5 rounded-full text-sm font-heading font-medium border border-border/60 text-foreground bg-background/30 backdrop-blur-xl hover:border-primary/40 hover:bg-background/50 transition shadow-[0_8px_30px_-12px_hsla(0,0%,0%,0.4)]"
+          whileHover={{ y: -2 }}
           whileTap={{ scale: 0.97 }}
         >
           Explore tools
@@ -112,9 +111,21 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
         ))}
       </motion.div>
 
-      {/* single subtle ring */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-        <div className="w-[600px] h-[600px] rounded-full border border-border/20" />
+      {/* glowing rings */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none -z-10">
+        {[400, 600, 820].map((size, i) => (
+          <motion.div
+            key={size}
+            className="absolute rounded-full border"
+            style={{
+              width: size, height: size, left: -size/2, top: -size/2,
+              borderColor: `hsla(265, 90%, 65%, ${0.18 - i*0.05})`,
+              boxShadow: i === 0 ? "0 0 80px -10px hsla(265,90%,65%,0.25)" : undefined,
+            }}
+            animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
+            transition={{ duration: 50 + i*20, repeat: Infinity, ease: "linear" }}
+          />
+        ))}
       </div>
     </section>
   );
@@ -130,39 +141,57 @@ function FeatureCards({ onSelect }: { onSelect: (id: TabId) => void }) {
   ];
 
   return (
-    <section className="py-20 px-4 max-w-5xl mx-auto">
+    <section className="py-20 px-4 max-w-6xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="mb-12 flex items-end justify-between"
+        className="mb-10 text-center"
       >
-        <div>
-          <p className="text-[10px] font-heading uppercase tracking-[0.25em] text-muted-foreground/70 mb-2">Toolkit</p>
-          <h2 className="font-heading font-medium text-3xl sm:text-4xl tracking-tight text-foreground">
-            Five tools. One workflow.
-          </h2>
-        </div>
+        <p className="text-[10px] font-heading uppercase tracking-[0.25em] text-primary/80 mb-3">Toolkit</p>
+        <h2 className="font-heading font-semibold text-3xl sm:text-4xl tracking-tight text-foreground">
+          Five tools. <span className="gradient-text">One workflow.</span>
+        </h2>
       </motion.div>
 
-      <div className="border-t border-border/40">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {features.map((f, i) => {
           const Icon = f.icon;
+          const palette = [
+            { a: "var(--neon-purple)", b: "var(--neon-pink)" },
+            { a: "var(--neon-pink)", b: "var(--neon-purple)" },
+            { a: "var(--neon-cyan)", b: "var(--neon-green)" },
+            { a: "var(--neon-green)", b: "var(--neon-cyan)" },
+            { a: "var(--neon-purple)", b: "var(--neon-cyan)" },
+          ][i % 5];
           return (
             <motion.button
               key={f.id}
               onClick={() => onSelect(f.id)}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="group w-full flex items-center gap-6 py-6 border-b border-border/40 text-left hover:bg-muted/10 transition-colors px-2"
+              transition={{ delay: i * 0.07 }}
+              className="neon-tile group"
+              style={{ ["--tile-accent" as any]: palette.a, ["--tile-accent-2" as any]: palette.b }}
             >
-              <span className="text-[10px] font-heading tracking-[0.2em] text-muted-foreground/60 w-8">{f.num}</span>
-              <Icon className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" strokeWidth={1.5} />
-              <h3 className="font-heading font-medium text-lg sm:text-xl text-foreground tracking-tight w-44">{f.title}</h3>
-              <p className="text-sm text-muted-foreground/80 hidden sm:block flex-1">{f.desc}</p>
-              <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-foreground group-hover:translate-x-1 transition-all" strokeWidth={1.5} />
+              <div className="flex items-center justify-between mb-5">
+                <div
+                  className="h-11 w-11 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: `radial-gradient(circle at 30% 25%, hsla(0,0%,100%,0.35), transparent 45%), linear-gradient(140deg, hsl(${palette.a}), hsl(${palette.b}))`,
+                    boxShadow: `0 8px 24px -8px hsla(${palette.a} / 0.6), inset 0 1px 0 hsla(0,0%,100%,0.35)`,
+                  }}
+                >
+                  <Icon className="h-5 w-5 text-white drop-shadow" strokeWidth={2} />
+                </div>
+                <span className="text-[10px] font-heading tracking-[0.2em] text-muted-foreground/60">{f.num}</span>
+              </div>
+              <h3 className="font-heading font-semibold text-lg text-foreground mb-1.5 tracking-tight">{f.title}</h3>
+              <p className="text-sm text-muted-foreground/80 leading-relaxed">{f.desc}</p>
+              <div className="mt-4 flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                Open <ArrowRight className="h-3 w-3" />
+              </div>
             </motion.button>
           );
         })}
@@ -211,17 +240,25 @@ export default function Index() {
       />
 
       {/* Header */}
-      <header className="border-b border-border/30 backdrop-blur-2xl sticky top-0 z-50 bg-background/60">
+      <header className="border-b border-border/20 backdrop-blur-2xl sticky top-0 z-50 bg-background/40 shadow-[0_8px_40px_-20px_hsla(265,90%,65%,0.3)]">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <motion.button
             onClick={() => setActiveTab(null)}
             className="flex items-center gap-2.5 group"
             whileHover={{ scale: 1.02 }}
           >
-            <div className="h-7 w-7 rounded-md border border-border/60 flex items-center justify-center bg-background/50">
-              <Youtube className="h-3.5 w-3.5 text-foreground" strokeWidth={1.5} />
-            </div>
-            <span className="font-heading font-medium text-sm tracking-tight text-foreground hidden sm:inline">
+            <motion.div
+              className="h-8 w-8 rounded-xl flex items-center justify-center bg-primary/15 border border-primary/30 backdrop-blur-xl"
+              animate={{ boxShadow: [
+                "0 0 15px hsla(265,90%,65%,0.2)",
+                "0 0 30px hsla(265,90%,65%,0.45)",
+                "0 0 15px hsla(265,90%,65%,0.2)",
+              ]}}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <Youtube className="h-4 w-4 text-primary" />
+            </motion.div>
+            <span className="font-heading font-semibold text-sm tracking-tight gradient-text hidden sm:inline">
               AI Content Lab
             </span>
           </motion.button>
