@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Image, Bot, TrendingUp, Type, Youtube,
-  Sparkles, Zap, Wand2, ArrowRight, Star, LogIn, LogOut, LayoutDashboard, Crown,
+  Zap, ArrowRight, Star, LogIn, LogOut, LayoutDashboard, Crown,
 } from "lucide-react";
 import { ScriptGenerator } from "@/components/ScriptGenerator";
 import { ThumbnailGenerator } from "@/components/ThumbnailGenerator";
