@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Image, Bot, TrendingUp, Type, Youtube,
-  Sparkles, Zap, Wand2, ArrowRight, Star, LogIn, LogOut, LayoutDashboard, Crown,
+  Zap, ArrowRight, Star, LogIn, LogOut, LayoutDashboard, Crown,
 } from "lucide-react";
 import { ScriptGenerator } from "@/components/ScriptGenerator";
 import { ThumbnailGenerator } from "@/components/ThumbnailGenerator";
@@ -19,11 +19,11 @@ import { useProfile } from "@/hooks/useProfile";
 import { toast } from "sonner";
 
 const tabs = [
-  { id: "script", label: "Script Generator", icon: FileText, emoji: "🎬" },
-  { id: "thumbnail", label: "Thumbnails", icon: Image, emoji: "🎨" },
-  { id: "chat", label: "AI Strategist", icon: Bot, emoji: "🤖" },
-  { id: "trending", label: "Trending Ideas", icon: TrendingUp, emoji: "🔥" },
-  { id: "titles", label: "Title Generator", icon: Type, emoji: "✨" },
+  { id: "script", label: "Script", icon: FileText },
+  { id: "thumbnail", label: "Thumbnail", icon: Image },
+  { id: "chat", label: "Strategist", icon: Bot },
+  { id: "trending", label: "Trending", icon: TrendingUp },
+  { id: "titles", label: "Titles", icon: Type },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -36,7 +36,7 @@ const stats = [
 
 function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
   return (
-    <section className="relative py-16 md:py-24 flex flex-col items-center text-center px-4">
+    <section className="relative py-24 md:py-32 flex flex-col items-center text-center px-4">
       {/* Badge */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -44,10 +44,9 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
         transition={{ delay: 0.1 }}
         className="mb-6"
       >
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-heading font-semibold border border-primary/30 bg-primary/10 text-primary">
-          <Sparkles className="h-3 w-3" />
-          Powered by Advanced AI
-          <Sparkles className="h-3 w-3" />
+        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-heading uppercase tracking-[0.25em] border border-border/50 bg-background/40 text-muted-foreground backdrop-blur-md">
+          <span className="w-1 h-1 rounded-full bg-primary" />
+          AI Content Lab
         </span>
       </motion.div>
 
@@ -56,16 +55,10 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="font-heading font-bold text-4xl sm:text-5xl md:text-7xl leading-tight max-w-4xl"
+        className="font-heading font-medium text-5xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight max-w-4xl"
       >
-        <span className="block text-foreground">Create YouTube</span>
-        <span className="block mt-2">
-          <span className="gradient-text">Magic</span>
-          {" "}
-          <span className="text-foreground">with</span>
-          {" "}
-          <span className="gradient-text-pink">AI</span>
-        </span>
+        <span className="block text-foreground">Create YouTube,</span>
+        <span className="block mt-1 text-muted-foreground/80 italic font-light">effortlessly.</span>
       </motion.h1>
 
       {/* Subtitle */}
@@ -73,10 +66,9 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="mt-6 text-muted-foreground text-base sm:text-lg max-w-2xl leading-relaxed"
+        className="mt-6 text-muted-foreground text-sm sm:text-base max-w-xl leading-relaxed"
       >
-        Generate viral scripts, eye-catching thumbnails, and winning content strategies
-        — all powered by cutting-edge AI. Your secret weapon for YouTube growth.
+        Scripts, thumbnails, titles and ideas — generated in seconds. A quiet toolkit for loud creators.
       </motion.p>
 
       {/* CTA Buttons */}
@@ -84,66 +76,45 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="mt-10 flex flex-col sm:flex-row gap-4"
+        className="mt-10 flex flex-col sm:flex-row gap-3"
       >
         <motion.button
           onClick={onGetStarted}
-          className="btn-neon group flex items-center gap-2 text-base px-8 py-4"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="group inline-flex items-center gap-2 text-sm font-heading font-medium px-6 py-3 rounded-full bg-foreground text-background hover:bg-foreground/90 transition"
+          whileHover={{ y: -1 }}
+          whileTap={{ scale: 0.97 }}
         >
-          <Wand2 className="h-5 w-5" />
-          Start Creating
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          Start creating
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
         </motion.button>
         <motion.button
           onClick={onGetStarted}
-          className="px-8 py-4 rounded-lg text-base font-heading font-semibold border border-border/50 text-foreground bg-muted/20 backdrop-blur-sm hover:bg-muted/40 transition-all"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="px-6 py-3 rounded-full text-sm font-heading font-medium border border-border/60 text-foreground hover:bg-muted/30 transition"
+          whileHover={{ y: -1 }}
+          whileTap={{ scale: 0.97 }}
         >
-          Explore Tools
+          Explore tools
         </motion.button>
       </motion.div>
 
-      {/* Stats */}
+      {/* Stats — minimal inline */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="mt-16 grid grid-cols-3 gap-6 sm:gap-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9 }}
+        className="mt-16 flex items-center gap-8 text-xs text-muted-foreground"
       >
-        {stats.map((stat, i) => (
-          <div key={stat.label} className="flex flex-col items-center gap-1">
-            <motion.span
-              className="font-heading font-bold text-2xl sm:text-3xl gradient-text"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 1 + i * 0.15, type: "spring" }}
-            >
-              {stat.value}
-            </motion.span>
-            <span className="text-xs sm:text-sm text-muted-foreground">{stat.label}</span>
+        {stats.map((stat) => (
+          <div key={stat.label} className="flex items-center gap-2">
+            <span className="font-heading font-medium text-foreground tabular-nums">{stat.value}</span>
+            <span className="opacity-70">{stat.label}</span>
           </div>
         ))}
       </motion.div>
 
-      {/* Decorative rings */}
+      {/* single subtle ring */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-        {[300, 500, 700].map((size, i) => (
-          <motion.div
-            key={size}
-            className="absolute rounded-full border border-primary/5"
-            style={{
-              width: size,
-              height: size,
-              left: -size / 2,
-              top: -size / 2,
-            }}
-            animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
-            transition={{ duration: 40 + i * 20, repeat: Infinity, ease: "linear" }}
-          />
-        ))}
+        <div className="w-[600px] h-[600px] rounded-full border border-border/20" />
       </div>
     </section>
   );
@@ -151,86 +122,47 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
 
 function FeatureCards({ onSelect }: { onSelect: (id: TabId) => void }) {
   const features = [
-    {
-      id: "script" as TabId,
-      icon: FileText,
-      title: "Script Generator",
-      desc: "Generate complete, engaging YouTube scripts in seconds with AI.",
-      gradient: "from-primary to-accent",
-      glowClass: "neon-glow-purple",
-    },
-    {
-      id: "thumbnail" as TabId,
-      icon: Image,
-      title: "Thumbnail Creator",
-      desc: "Design stunning thumbnails that boost your click-through rate.",
-      gradient: "from-accent to-primary",
-      glowClass: "neon-glow-pink",
-    },
-    {
-      id: "chat" as TabId,
-      icon: Bot,
-      title: "AI Strategist",
-      desc: "Chat with AI for personalized growth & content strategies.",
-      gradient: "from-secondary to-neon-green",
-      glowClass: "neon-glow-cyan",
-    },
-    {
-      id: "trending" as TabId,
-      icon: TrendingUp,
-      title: "Trending Ideas",
-      desc: "Discover what's trending and never run out of content ideas.",
-      gradient: "from-neon-green to-secondary",
-      glowClass: "neon-glow-cyan",
-    },
-    {
-      id: "titles" as TabId,
-      icon: Type,
-      title: "Title Generator",
-      desc: "Craft click-worthy titles that rank and attract viewers.",
-      gradient: "from-primary to-secondary",
-      glowClass: "neon-glow-purple",
-    },
+    { id: "script" as TabId, icon: FileText, title: "Script", desc: "Long-form scripts in seconds.", num: "01" },
+    { id: "thumbnail" as TabId, icon: Image, title: "Thumbnail", desc: "High-CTR cover images.", num: "02" },
+    { id: "chat" as TabId, icon: Bot, title: "Strategist", desc: "On-demand growth advice.", num: "03" },
+    { id: "trending" as TabId, icon: TrendingUp, title: "Trending", desc: "Ideas that ride the wave.", num: "04" },
+    { id: "titles" as TabId, icon: Type, title: "Titles", desc: "Headlines that get clicks.", num: "05" },
   ];
 
   return (
-    <section className="py-12 px-4">
+    <section className="py-20 px-4 max-w-5xl mx-auto">
       <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-center mb-12"
+        className="mb-12 flex items-end justify-between"
       >
-        <h2 className="font-heading font-bold text-2xl sm:text-3xl text-foreground">
-          Powerful <span className="gradient-text">AI Tools</span> at Your Fingertips
-        </h2>
-        <p className="mt-3 text-muted-foreground max-w-lg mx-auto text-sm">
-          Everything you need to create viral YouTube content — all in one place.
-        </p>
+        <div>
+          <p className="text-[10px] font-heading uppercase tracking-[0.25em] text-muted-foreground/70 mb-2">Toolkit</p>
+          <h2 className="font-heading font-medium text-3xl sm:text-4xl tracking-tight text-foreground">
+            Five tools. One workflow.
+          </h2>
+        </div>
       </motion.div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+      <div className="border-t border-border/40">
         {features.map((f, i) => {
           const Icon = f.icon;
           return (
             <motion.button
               key={f.id}
               onClick={() => onSelect(f.id)}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              className={`glass-card-hover p-6 text-left group cursor-pointer`}
+              transition={{ delay: i * 0.05 }}
+              className="group w-full flex items-center gap-6 py-6 border-b border-border/40 text-left hover:bg-muted/10 transition-colors px-2"
             >
-              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${f.gradient} flex items-center justify-center mb-4 group-hover:${f.glowClass} transition-shadow`}>
-                <Icon className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <h3 className="font-heading font-semibold text-lg text-foreground mb-2">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-              <div className="mt-4 flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                Try it now <ArrowRight className="h-3 w-3" />
-              </div>
+              <span className="text-[10px] font-heading tracking-[0.2em] text-muted-foreground/60 w-8">{f.num}</span>
+              <Icon className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" strokeWidth={1.5} />
+              <h3 className="font-heading font-medium text-lg sm:text-xl text-foreground tracking-tight w-44">{f.title}</h3>
+              <p className="text-sm text-muted-foreground/80 hidden sm:block flex-1">{f.desc}</p>
+              <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-foreground group-hover:translate-x-1 transition-all" strokeWidth={1.5} />
             </motion.button>
           );
         })}
@@ -279,27 +211,17 @@ export default function Index() {
       />
 
       {/* Header */}
-      <header className="border-b border-border/10 backdrop-blur-2xl sticky top-0 z-50 bg-background/30">
+      <header className="border-b border-border/30 backdrop-blur-2xl sticky top-0 z-50 bg-background/60">
         <div className="container max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <motion.button
             onClick={() => setActiveTab(null)}
-            className="flex items-center gap-3 group"
+            className="flex items-center gap-2.5 group"
             whileHover={{ scale: 1.02 }}
           >
-            <motion.div
-              className="p-2 rounded-xl bg-primary/15 border border-primary/20"
-              animate={{
-                boxShadow: [
-                  "0 0 15px hsla(265,90%,65%,0.15)",
-                  "0 0 30px hsla(265,90%,65%,0.3)",
-                  "0 0 15px hsla(265,90%,65%,0.15)",
-                ],
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              <Youtube className="h-5 w-5 text-primary" />
-            </motion.div>
-            <span className="font-heading font-bold text-base gradient-text hidden sm:inline">
+            <div className="h-7 w-7 rounded-md border border-border/60 flex items-center justify-center bg-background/50">
+              <Youtube className="h-3.5 w-3.5 text-foreground" strokeWidth={1.5} />
+            </div>
+            <span className="font-heading font-medium text-sm tracking-tight text-foreground hidden sm:inline">
               AI Content Lab
             </span>
           </motion.button>
@@ -413,15 +335,11 @@ export default function Index() {
                       {isActive && (
                         <motion.div
                           layoutId="activeTab"
-                          className="absolute inset-0 rounded-2xl neon-glow-purple"
-                          style={{
-                            background: "linear-gradient(135deg, hsla(265,90%,65%,0.12), hsla(190,95%,50%,0.06))",
-                          }}
+                          className="absolute inset-0 rounded-2xl bg-muted/40 border border-border/60"
                           transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                         />
                       )}
-                      <span className="relative z-10">{tab.emoji}</span>
-                      <Icon className="h-4 w-4 relative z-10" />
+                      <Icon className="h-3.5 w-3.5 relative z-10" strokeWidth={1.5} />
                       <span className="hidden sm:inline relative z-10">{tab.label}</span>
                     </motion.button>
                   );
