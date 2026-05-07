@@ -101,6 +101,13 @@ export async function generateTweets(topic: string): Promise<string[]> {
     .slice(0, 5);
 }
 
+export async function analyzeChannel(channelUrl: string): Promise<string> {
+  return callAI(
+    [{ role: "user", content: `Analyze this YouTube channel and tell me where it lags: ${channelUrl}` }],
+    "analyze"
+  );
+}
+
 export async function generateThumbnail(idea: string): Promise<string> {
   const { data, error } = await supabase.functions.invoke("chat", {
     body: {
