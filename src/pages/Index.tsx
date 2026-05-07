@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Image, Bot, TrendingUp, Type, Youtube,
-  Zap, ArrowRight, Star, LogIn, LogOut, LayoutDashboard, Crown,
+  Zap, ArrowRight, Star, LogOut, LayoutDashboard, Crown,
   AlignLeft, Hash, Sparkles, Tags, Twitter,
 } from "lucide-react";
 import { ScriptGenerator } from "@/components/ScriptGenerator";
@@ -221,10 +221,6 @@ export default function Index() {
   const navigate = useNavigate();
 
   const handleSelectTool = (id: TabId) => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
     if (profile && profile.credits <= 0) {
       toast.error("Out of credits! Upgrade to keep creating.", {
         action: { label: "Upgrade", onClick: () => navigate("/pricing") },
@@ -310,7 +306,7 @@ export default function Index() {
                 <span className="hidden sm:inline">Dashboard</span>
               </motion.button>
             )}
-            {user ? (
+            {user && (
               <motion.button
                 onClick={signOut}
                 whileHover={{ scale: 1.05 }}
@@ -320,16 +316,6 @@ export default function Index() {
               >
                 <LogOut className="h-3 w-3" />
                 <span className="hidden sm:inline">Sign out</span>
-              </motion.button>
-            ) : (
-              <motion.button
-                onClick={() => navigate("/login")}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-gradient-to-r from-[hsl(0,85%,55%)] to-[hsl(330,85%,60%)] text-white shadow-lg"
-              >
-                <LogIn className="h-3 w-3" />
-                Sign in
               </motion.button>
             )}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-green/10 border border-neon-green/20">
