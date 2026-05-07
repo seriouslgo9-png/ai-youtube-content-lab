@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Image, Bot, TrendingUp, Type, Youtube,
   Zap, ArrowRight, Star, LogOut, LayoutDashboard, Crown,
-  AlignLeft, Hash, Sparkles, Tags, Twitter,
+  AlignLeft, Hash, Sparkles, Tags, Twitter, BarChart3,
 } from "lucide-react";
 import { ScriptGenerator } from "@/components/ScriptGenerator";
 import { ThumbnailGenerator } from "@/components/ThumbnailGenerator";
@@ -12,6 +12,7 @@ import { AIChatbot } from "@/components/AIChatbot";
 import { TrendingIdeas } from "@/components/TrendingIdeas";
 import { TitleGenerator } from "@/components/TitleGenerator";
 import { DescriptionGenerator } from "@/components/DescriptionGenerator";
+import { ChannelAnalyzer } from "@/components/ChannelAnalyzer";
 import { ListTool } from "@/components/ListTool";
 import { generateHashtags, generateHooks, generateTags, generateTweets } from "@/lib/ai-service";
 import { FloatingBubbles } from "@/components/FloatingBubbles";
@@ -33,6 +34,7 @@ const tabs = [
   { id: "hashtags", label: "Hashtags", icon: Hash },
   { id: "tags", label: "SEO Tags", icon: Tags },
   { id: "tweets", label: "Tweets", icon: Twitter },
+  { id: "analyze", label: "Channel Audit", icon: BarChart3 },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -152,6 +154,7 @@ function FeatureCards({ onSelect }: { onSelect: (id: TabId) => void }) {
     { id: "hashtags" as TabId, icon: Hash, title: "Hashtags", desc: "Discovery-optimized tags.", num: "08" },
     { id: "tags" as TabId, icon: Tags, title: "SEO Tags", desc: "Rank with the right keywords.", num: "09" },
     { id: "tweets" as TabId, icon: Twitter, title: "Tweets", desc: "Promo posts that drive clicks.", num: "10" },
+    { id: "analyze" as TabId, icon: BarChart3, title: "Channel Audit", desc: "Find where your channel lags — paste any link.", num: "11" },
   ];
 
   return (
@@ -438,6 +441,7 @@ export default function Index() {
                       resultsTitle="Promo Tweets" generate={generateTweets}
                     />
                   )}
+                  {activeTab === "analyze" && <ChannelAnalyzer />}
                 </motion.div>
               </AnimatePresence>
             </motion.div>
