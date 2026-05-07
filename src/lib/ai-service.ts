@@ -47,6 +47,60 @@ export async function generateTitles(topic: string): Promise<string[]> {
     .slice(0, 5);
 }
 
+export async function generateDescription(topic: string): Promise<string> {
+  return callAI(
+    [{ role: "user", content: `Write a YouTube video description for: ${topic}` }],
+    "description"
+  );
+}
+
+export async function generateHashtags(topic: string): Promise<string[]> {
+  const content = await callAI(
+    [{ role: "user", content: `Generate hashtags for: ${topic}` }],
+    "hashtags"
+  );
+  return content
+    .split(/\s+/)
+    .filter((t) => t.startsWith("#"))
+    .slice(0, 20);
+}
+
+export async function generateHooks(topic: string): Promise<string[]> {
+  const content = await callAI(
+    [{ role: "user", content: `Generate opening hooks for: ${topic}` }],
+    "hooks"
+  );
+  return content
+    .split("\n")
+    .filter((l) => l.trim().length > 0)
+    .map((l) => l.replace(/^\d+[\.\)]\s*/, ""))
+    .slice(0, 7);
+}
+
+export async function generateTags(topic: string): Promise<string[]> {
+  const content = await callAI(
+    [{ role: "user", content: `Generate SEO tags for: ${topic}` }],
+    "tags"
+  );
+  return content
+    .split(",")
+    .map((t) => t.trim())
+    .filter((t) => t.length > 0)
+    .slice(0, 30);
+}
+
+export async function generateTweets(topic: string): Promise<string[]> {
+  const content = await callAI(
+    [{ role: "user", content: `Generate promo tweets for: ${topic}` }],
+    "tweets"
+  );
+  return content
+    .split("\n")
+    .filter((l) => l.trim().length > 0)
+    .map((l) => l.replace(/^\d+[\.\)]\s*/, ""))
+    .slice(0, 5);
+}
+
 export async function generateThumbnail(idea: string): Promise<string> {
   const { data, error } = await supabase.functions.invoke("chat", {
     body: {

@@ -4,12 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Image, Bot, TrendingUp, Type, Youtube,
   Zap, ArrowRight, Star, LogIn, LogOut, LayoutDashboard, Crown,
+  AlignLeft, Hash, Sparkles, Tags, Twitter,
 } from "lucide-react";
 import { ScriptGenerator } from "@/components/ScriptGenerator";
 import { ThumbnailGenerator } from "@/components/ThumbnailGenerator";
 import { AIChatbot } from "@/components/AIChatbot";
 import { TrendingIdeas } from "@/components/TrendingIdeas";
 import { TitleGenerator } from "@/components/TitleGenerator";
+import { DescriptionGenerator } from "@/components/DescriptionGenerator";
+import { ListTool } from "@/components/ListTool";
+import { generateHashtags, generateHooks, generateTags, generateTweets } from "@/lib/ai-service";
 import { FloatingBubbles } from "@/components/FloatingBubbles";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { RobotBot } from "@/components/RobotBot";
@@ -24,6 +28,11 @@ const tabs = [
   { id: "chat", label: "Strategist", icon: Bot },
   { id: "trending", label: "Trending", icon: TrendingUp },
   { id: "titles", label: "Titles", icon: Type },
+  { id: "description", label: "Description", icon: AlignLeft },
+  { id: "hooks", label: "Hooks", icon: Sparkles },
+  { id: "hashtags", label: "Hashtags", icon: Hash },
+  { id: "tags", label: "SEO Tags", icon: Tags },
+  { id: "tweets", label: "Tweets", icon: Twitter },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -138,6 +147,11 @@ function FeatureCards({ onSelect }: { onSelect: (id: TabId) => void }) {
     { id: "chat" as TabId, icon: Bot, title: "Strategist", desc: "On-demand growth advice.", num: "03" },
     { id: "trending" as TabId, icon: TrendingUp, title: "Trending", desc: "Ideas that ride the wave.", num: "04" },
     { id: "titles" as TabId, icon: Type, title: "Titles", desc: "Headlines that get clicks.", num: "05" },
+    { id: "description" as TabId, icon: AlignLeft, title: "Description", desc: "SEO-rich video descriptions.", num: "06" },
+    { id: "hooks" as TabId, icon: Sparkles, title: "Hooks", desc: "First 5-second attention grabbers.", num: "07" },
+    { id: "hashtags" as TabId, icon: Hash, title: "Hashtags", desc: "Discovery-optimized tags.", num: "08" },
+    { id: "tags" as TabId, icon: Tags, title: "SEO Tags", desc: "Rank with the right keywords.", num: "09" },
+    { id: "tweets" as TabId, icon: Twitter, title: "Tweets", desc: "Promo posts that drive clicks.", num: "10" },
   ];
 
   return (
@@ -397,6 +411,47 @@ export default function Index() {
                   {activeTab === "chat" && <AIChatbot />}
                   {activeTab === "trending" && <TrendingIdeas />}
                   {activeTab === "titles" && <TitleGenerator />}
+                  {activeTab === "description" && <DescriptionGenerator />}
+                  {activeTab === "hooks" && (
+                    <ListTool
+                      icon={Sparkles} eyebrow="Retention" title="Hook Generator"
+                      description="Stop the scroll in the first 5 seconds."
+                      accent="var(--neon-pink)" accent2="var(--neon-purple)"
+                      placeholder="Enter your video topic"
+                      loadingText="Crafting hooks..." successText="Hooks ready! 🎯"
+                      resultsTitle="Opening Hooks" generate={generateHooks}
+                    />
+                  )}
+                  {activeTab === "hashtags" && (
+                    <ListTool
+                      icon={Hash} eyebrow="Discovery" title="Hashtag Generator"
+                      description="15 hashtags optimized for reach."
+                      accent="var(--neon-cyan)" accent2="var(--neon-purple)"
+                      placeholder="Enter your video topic"
+                      loadingText="Finding hashtags..." successText="Hashtags ready! #️⃣"
+                      resultsTitle="Hashtags" generate={generateHashtags} layout="chips"
+                    />
+                  )}
+                  {activeTab === "tags" && (
+                    <ListTool
+                      icon={Tags} eyebrow="SEO" title="SEO Tag Generator"
+                      description="Keywords to power your ranking."
+                      accent="var(--neon-green)" accent2="var(--neon-cyan)"
+                      placeholder="Enter your video topic"
+                      loadingText="Mining keywords..." successText="Tags ready! 🔍"
+                      resultsTitle="SEO Tags" generate={generateTags} layout="chips"
+                    />
+                  )}
+                  {activeTab === "tweets" && (
+                    <ListTool
+                      icon={Twitter} eyebrow="Promo" title="Tweet Generator"
+                      description="Promo tweets that drive video clicks."
+                      accent="var(--neon-purple)" accent2="var(--neon-pink)"
+                      placeholder="Enter your video topic"
+                      loadingText="Composing tweets..." successText="Tweets ready! 🐦"
+                      resultsTitle="Promo Tweets" generate={generateTweets}
+                    />
+                  )}
                 </motion.div>
               </AnimatePresence>
             </motion.div>

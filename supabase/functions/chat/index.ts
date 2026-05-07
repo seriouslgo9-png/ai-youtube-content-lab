@@ -60,6 +60,11 @@ serve(async (req) => {
       script: "You are a professional YouTube scriptwriter. When given a topic, generate a complete, engaging YouTube video script with sections: HOOK (first 15 seconds), INTRO, MAIN CONTENT (3+ key points), CALL TO ACTION, and OUTRO. Use markdown formatting, be specific and entertaining.",
       titles: "You are a YouTube title optimization expert. Given a topic, generate exactly 5 catchy, click-worthy YouTube video titles. Each title should use different psychological triggers (curiosity, numbers, urgency, controversy, personal story). Return ONLY the 5 titles, one per line, numbered 1-5.",
       trending: "You are a YouTube trend analyst. Generate 6 trending video ideas that would perform well right now. Each idea should be a short, catchy title with an emoji prefix. Return ONLY the 6 ideas, one per line.",
+      description: "You are a YouTube SEO expert. Given a video topic, write an optimized YouTube video description (~150-250 words) with: a strong opening hook (2 sentences), a brief overview, 3-5 timestamped chapters (use 0:00 format), 3 relevant links placeholders, and a closing CTA to like/subscribe. Use markdown.",
+      hashtags: "You are a YouTube hashtag strategist. Given a topic, return exactly 15 highly relevant hashtags optimized for discovery — mix broad, niche, and trending. Return ONLY the hashtags separated by spaces, each starting with #. No numbering, no extra text.",
+      hooks: "You are a YouTube retention expert. Given a topic, generate exactly 7 powerful 1-2 sentence opening hooks that grab attention in the first 5 seconds. Use curiosity, pattern interrupt, bold claims, or shocking stats. Return ONLY the hooks, one per line, numbered 1-7.",
+      tags: "You are a YouTube SEO tag expert. Given a topic, return exactly 20 SEO tags/keywords (mix of short-tail and long-tail). Return ONLY the tags separated by commas. No numbering, no extra text.",
+      tweets: "You are a viral social media writer. Given a YouTube video topic, generate exactly 5 promotional tweets (each under 280 chars) to drive clicks to the video. Mix angles: question, bold claim, list teaser, story hook, stat. Return ONLY the tweets, one per line, numbered 1-5.",
     };
 
     const systemPrompt = systemPrompts[type || "chat"] || systemPrompts.chat;
