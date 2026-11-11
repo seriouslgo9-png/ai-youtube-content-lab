@@ -17,7 +17,6 @@ import { ListTool } from "@/components/ListTool";
 import { generateHashtags, generateHooks, generateTags, generateTweets } from "@/lib/ai-service";
 import { FloatingBubbles } from "@/components/FloatingBubbles";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { RobotBot } from "@/components/RobotBot";
 import { useAuth } from "@/hooks/useAuth";
 import { CreditsBadge } from "@/components/CreditsBadge";
 import { useProfile } from "@/hooks/useProfile";
@@ -237,7 +236,6 @@ export default function Index() {
   return (
     <div className="min-h-screen relative">
       <FloatingBubbles />
-      {!activeTab && <RobotBot />}
 
       {/* Mesh gradient overlay */}
       <div
