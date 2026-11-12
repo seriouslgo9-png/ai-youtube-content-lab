@@ -1,17 +1,17 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Sparkles, Zap, Crown, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { useProfile } from "@/hooks/useProfile";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { FloatingBubbles } from "@/components/FloatingBubbles";
+import { Button } from "@/components/ui/button";
+import { getLocalPlan, planPricesInRupees, saveLocalPlan, type PlanId } from "@/lib/pricing";
 
 const plans = [
   {
     id: "free" as const,
     name: "Starter",
-    price: "$0",
+    price: "Free",
     period: "forever",
     icon: Sparkles,
     credits: 10,
@@ -26,7 +26,7 @@ const plans = [
   {
     id: "pro" as const,
     name: "Creator Pro",
-    price: "$19",
+    price: `₹${planPricesInRupees.pro}`,
     period: "/ month",
     icon: Zap,
     credits: 500,
@@ -34,7 +34,7 @@ const plans = [
     gradient: "from-[hsl(265,90%,65%)] to-[hsl(330,85%,60%)]",
     features: [
       "500 generations / month",
-      "Premium AI models (GPT-5, Gemini Pro)",
+      "Creator Pro plan preview",
       "Voice agent unlimited",
       "Export to PDF & CSV",
       "Priority email support",
@@ -44,14 +44,14 @@ const plans = [
   {
     id: "business" as const,
     name: "Studio",
-    price: "$49",
+    price: `₹${planPricesInRupees.business}`,
     period: "/ month",
     icon: Crown,
     credits: 2500,
     gradient: "from-[hsl(190,95%,50%)] to-[hsl(265,90%,65%)]",
     features: [
       "2,500 generations / month",
-      "All Pro features",
+      "All Creator Pro preview features",
       "Team seats (up to 5)",
       "API access",
       "White-label exports",
@@ -62,31 +62,12 @@ const plans = [
 
 export default function Pricing() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { profile, refresh } = useProfile();
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>(() => getLocalPlan());
 
-  const handleSelect = async (planId: "free" | "pro" | "business") => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    if (planId === "free") {
-      toast.info("You're on the Starter plan");
-      return;
-    }
-    // Demo mode: instant upgrade. Wire real payments later.
-    const newCredits = planId === "pro" ? 500 : 2500;
-    const { error } = await supabase
-      .from("profiles")
-      .update({ plan: planId, credits: newCredits })
-      .eq("id", user.id);
-    if (error) {
-      toast.error("Upgrade failed");
-      return;
-    }
-    await refresh();
-    toast.success(`Welcome to ${planId === "pro" ? "Creator Pro" : "Studio"}! 🎉`);
-    navigate("/");
+  const handleSelect = (planId: PlanId) => {
+    saveLocalPlan(planId);
+    setSelectedPlan(planId);
+    toast.success(`${plans.find((plan) => plan.id === planId)?.name} saved on this device.`);
   };
 
   return (
@@ -117,20 +98,17 @@ export default function Pricing() {
             <span className="gradient-text-pink">creators</span>
           </motion.h1>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-            Start free. Upgrade when you're ready to scale your channel with unlimited AI power.
+            Starter is free. Pick a local plan preview: Creator Pro is ₹299/month or Studio is ₹599/month.
           </p>
-          {profile && (
-            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs border border-border/50 bg-muted/20">
-              Current plan: <span className="font-semibold capitalize">{profile.plan}</span> ·{" "}
-              {profile.credits} credits left
-            </div>
-          )}
+          <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs border border-border/50 bg-muted/20">
+            Selected plan: <span className="font-semibold">{plans.find((plan) => plan.id === selectedPlan)?.name}</span>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {plans.map((p, i) => {
             const Icon = p.icon;
-            const isCurrent = profile?.plan === p.id;
+            const isCurrent = selectedPlan === p.id;
             return (
               <motion.div
                 key={p.id}
@@ -164,26 +142,21 @@ export default function Pricing() {
                     </li>
                   ))}
                 </ul>
-                <button
+                <Button
                   onClick={() => handleSelect(p.id)}
                   disabled={isCurrent}
-                  className={`w-full py-3 rounded-lg font-heading font-semibold text-sm transition-all ${
-                    isCurrent
-                      ? "bg-muted text-muted-foreground cursor-not-allowed"
-                      : p.popular
-                      ? "btn-neon"
-                      : "border border-border/50 hover:bg-muted/30 text-foreground"
-                  }`}
+                  variant={p.popular ? "default" : "outline"}
+                  className={`w-full font-heading font-semibold ${p.popular ? "btn-neon" : ""}`}
                 >
-                  {isCurrent ? "Current plan" : p.id === "free" ? "Get started" : `Upgrade to ${p.name}`}
-                </button>
+                  {isCurrent ? "Selected plan" : `Choose ${p.name}`}
+                </Button>
               </motion.div>
             );
           })}
         </div>
 
         <p className="text-center text-xs text-muted-foreground mt-10">
-          💳 Demo mode — payments not yet connected. Plans switch instantly for testing.
+          Plan selections are saved only in this browser. No payment is taken, and selecting a plan does not activate paid features.
         </p>
       </div>
     </div>
