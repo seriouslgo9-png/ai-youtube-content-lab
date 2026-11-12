@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Sparkles, Zap, Crown, ArrowLeft } from "lucide-react";
+import { Check, Sparkles, Zap, Crown, ArrowLeft, QrCode } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { FloatingBubbles } from "@/components/FloatingBubbles";
 import { Button } from "@/components/ui/button";
-import { getLocalPlan, planPricesInRupees, saveLocalPlan, type PlanId } from "@/lib/pricing";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import paymentQr from "@/assets/ai-youtube-studio-upi-qr.png.asset.json";
+import { getLocalPlan, getPlanSelectionAction, planPricesInRupees, saveLocalPlan, type PlanId } from "@/lib/pricing";
 
 const plans = [
   {
@@ -63,12 +71,20 @@ const plans = [
 export default function Pricing() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState<PlanId>(() => getLocalPlan());
+  const [paymentPlan, setPaymentPlan] = useState<PlanId | null>(null);
 
   const handleSelect = (planId: PlanId) => {
+    if (getPlanSelectionAction(planId) === "show_payment") {
+      setPaymentPlan(planId);
+      return;
+    }
+
     saveLocalPlan(planId);
     setSelectedPlan(planId);
-    toast.success(`${plans.find((plan) => plan.id === planId)?.name} saved on this device.`);
+    toast.success("Starter saved as your local plan preview.");
   };
+
+  const paymentPlanDetails = plans.find((plan) => plan.id === paymentPlan);
 
   return (
     <div className="min-h-screen relative">
@@ -144,11 +160,11 @@ export default function Pricing() {
                 </ul>
                 <Button
                   onClick={() => handleSelect(p.id)}
-                  disabled={isCurrent}
+                  disabled={isCurrent && p.id === "free"}
                   variant={p.popular ? "default" : "outline"}
                   className={`w-full font-heading font-semibold ${p.popular ? "btn-neon" : ""}`}
                 >
-                  {isCurrent ? "Selected plan" : `Choose ${p.name}`}
+                  {p.id === "free" && isCurrent ? "Selected preview" : `Choose ${p.name}`}
                 </Button>
               </motion.div>
             );
@@ -156,9 +172,46 @@ export default function Pricing() {
         </div>
 
         <p className="text-center text-xs text-muted-foreground mt-10">
-          Plan selections are saved only in this browser. No payment is taken, and selecting a plan does not activate paid features.
+          Plan choices are previews saved on this device. A QR payment is not automatically verified and does not activate paid features.
         </p>
       </div>
+
+      <Dialog open={paymentPlan !== null} onOpenChange={(open) => !open && setPaymentPlan(null)}>
+        <DialogContent className="max-h-[90vh] w-[calc(100%-2rem)] max-w-md overflow-y-auto border-border/70 bg-background/95 p-5 backdrop-blur-xl sm:p-6">
+          {paymentPlanDetails && (
+            <>
+              <DialogHeader className="pr-7 text-center sm:text-center">
+                <DialogTitle className="font-heading text-2xl">Pay for {paymentPlanDetails.name}</DialogTitle>
+                <DialogDescription>
+                  Scan the UPI code and pay <span className="font-semibold text-foreground">₹{planPricesInRupees[paymentPlanDetails.id]}</span> / month.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="mx-auto w-full max-w-[310px] rounded-xl border border-border bg-white p-2">
+                <img
+                  src={paymentQr.url}
+                  alt="AI YouTube Studio UPI payment QR code"
+                  className="h-auto w-full rounded-md"
+                />
+              </div>
+
+              <div className="space-y-3 text-sm">
+                <p className="flex items-center justify-center gap-2 text-center text-foreground">
+                  <QrCode className="h-4 w-4 shrink-0 text-primary" />
+                  Scan with any UPI app; enter the plan amount if asked.
+                </p>
+                <p className="text-center text-xs text-muted-foreground">
+                  Payment is not verified automatically. Your plan stays a preview until payment is confirmed.
+                </p>
+              </div>
+
+              <Button variant="outline" onClick={() => setPaymentPlan(null)} className="w-full">
+                Close
+              </Button>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

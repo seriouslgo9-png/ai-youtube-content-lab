@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { getLocalPlan, planPricesInRupees, saveLocalPlan } from "@/lib/pricing";
+import { getLocalPlan, getPlanSelectionAction, planPricesInRupees, saveLocalPlan } from "@/lib/pricing";
 
 describe("local pricing plans", () => {
   beforeEach(() => localStorage.clear());
@@ -12,5 +12,11 @@ describe("local pricing plans", () => {
     expect(getLocalPlan()).toBe("free");
     saveLocalPlan("pro");
     expect(getLocalPlan()).toBe("pro");
+  });
+
+  it("opens payment for both paid plans instead of saving them as active", () => {
+    expect(getPlanSelectionAction("pro")).toBe("show_payment");
+    expect(getPlanSelectionAction("business")).toBe("show_payment");
+    expect(getPlanSelectionAction("free")).toBe("save");
   });
 });

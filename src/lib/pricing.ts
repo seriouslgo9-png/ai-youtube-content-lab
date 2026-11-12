@@ -6,6 +6,10 @@ export const planPricesInRupees: Record<PlanId, number> = {
   business: 599,
 };
 
+export function getPlanSelectionAction(plan: PlanId): "save" | "show_payment" {
+  return plan === "free" ? "save" : "show_payment";
+}
+
 const LOCAL_PLAN_KEY = "yt-content-lab-selected-plan";
 
 export function getLocalPlan(): PlanId {
